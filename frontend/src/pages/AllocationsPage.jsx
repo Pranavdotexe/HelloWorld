@@ -38,7 +38,7 @@ function AllocationsPage() {
 
   useEffect(() => {
     if (showForm) {
-      getAssets({ status: 'Available', limit: 100 })
+      getAssets({ status: 'Available', isBookable: 'false', limit: 100 })
         .then((res) => setAssetsList(res.data.data.assets || []))
         .catch(() => setAssetsList([]));
 

@@ -7,6 +7,8 @@ import {
   getAuditCycles,
   getAuditEntries,
   getDiscrepancyReport,
+  getUsers,
+  getAssets,
 } from '../api/dataApi';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -25,12 +27,22 @@ function AuditsPage() {
   const [cycles, setCycles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ scope: { type: 'Department', value: '' }, auditors: '' });
+  const [form, setForm] = useState({ scope: { type: 'Department', value: '' }, auditors: [] });
   const [error, setError] = useState('');
   const [selectedCycle, setSelectedCycle] = useState(null);
   const [entries, setEntries] = useState([]);
   const [entryForm, setEntryForm] = useState({});
   const [report, setReport] = useState(null);
+  const [usersList, setUsersList] = useState([]);
+  const [scopedAssets, setScopedAssets] = useState([]);
+
+  useEffect(() => {
+    if (showForm) {
+      getUsers({ limit: 100 })
+        .then((res) => setUsersList(res.data.data.users || []))
+        .catch(() => setUsersList([]));
+    }
+  }, [showForm]);
 
   const load = async () => {
     setLoading(true);
@@ -52,10 +64,10 @@ function AuditsPage() {
     try {
       await createAuditCycle({
         ...form,
-        auditors: form.auditors.split(',').map((value) => value.trim()).filter(Boolean),
+        auditors: form.auditors || [],
       });
       setShowForm(false);
-      setForm({ scope: { type: 'Department', value: '' }, auditors: '' });
+      setForm({ scope: { type: 'Department', value: '' }, auditors: [] });
       load();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create audit cycle');
@@ -68,8 +80,23 @@ function AuditsPage() {
     try {
       const res = await getAuditEntries(cycle._id);
       setEntries(res.data.data.entries);
+      getAssets({ limit: 200 })
+        .then((assetRes) => {
+          const list = assetRes.data.data.assets || [];
+          const filtered = list.filter((a) => {
+            if (cycle.scope?.type === 'Department') {
+              return a.department?.name === cycle.scope.value || a.department?._id === cycle.scope.value;
+            } else if (cycle.scope?.type === 'Location') {
+              return a.location?.toLowerCase().includes(cycle.scope.value.toLowerCase());
+            }
+            return true;
+          });
+          setScopedAssets(filtered.length > 0 ? filtered : list);
+        })
+        .catch(() => setScopedAssets([]));
     } catch {
       setEntries([]);
+      setScopedAssets([]);
     }
   };
 
@@ -162,9 +189,29 @@ function AuditsPage() {
                   <label>End date</label>
                   <input className="input" type="date" value={form.endDate || ''} onChange={(event) => setForm({ ...form, endDate: event.target.value })} required />
                 </div>
-                <div className="field">
-                  <label>Auditor IDs</label>
-                  <input className="input" value={form.auditors} onChange={(event) => setForm({ ...form, auditors: event.target.value })} placeholder="id1, id2, id3" required />
+                <div className="field" style={{ gridColumn: 'span 2' }}>
+                  <label>Assigned Auditors</label>
+                  <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', maxHeight: 120, overflowY: 'auto', padding: '0.6rem', borderRadius: 16, background: 'rgba(148, 163, 184, 0.06)', border: '1px solid rgba(148, 163, 184, 0.08)' }}>
+                    {usersList.map((u) => {
+                      const isChecked = (form.auditors || []).includes(u._id);
+                      return (
+                        <label key={u._id} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', padding: '0.2rem 0.5rem', background: 'rgba(148, 163, 184, 0.06)', borderRadius: 8 }}>
+                          <input 
+                            type="checkbox" 
+                            checked={isChecked} 
+                            onChange={(e) => {
+                              const current = form.auditors || [];
+                              const updated = e.target.checked 
+                                ? [...current, u._id] 
+                                : current.filter((id) => id !== u._id);
+                              setForm({ ...form, auditors: updated });
+                            }} 
+                          />
+                          <span style={{ fontSize: '0.85rem' }}>{u.name}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -204,8 +251,15 @@ function AuditsPage() {
                 <form onSubmit={handleEntry} style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
                     <div className="field">
-                      <label>Asset ID</label>
-                      <input className="input" value={entryForm.asset || ''} onChange={(event) => setEntryForm({ ...entryForm, asset: event.target.value })} required />
+                      <label>Asset</label>
+                      <select className="select" value={entryForm.asset || ''} onChange={(event) => setEntryForm({ ...entryForm, asset: event.target.value })} required>
+                        <option value="">Select scoped asset...</option>
+                        {scopedAssets.map((asset) => (
+                          <option key={asset._id} value={asset._id}>
+                            {asset.name} ({asset.assetTag})
+                          </option>
+                        ))}
+                      </select>
                     </div>
                     <div className="field">
                       <label>Result</label>
