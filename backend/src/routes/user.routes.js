@@ -10,20 +10,19 @@ const { ROLES } = require('../config/constants');
 
 const authValidator = require('../validators/auth.validator');
 
-// All user management routes require authentication + Admin role
+// All user management routes require authentication
 router.use(auth);
-router.use(authorize(ROLES.ADMIN));
 
 // POST /api/v1/users — Admin only
-router.post('/', validate(authValidator.register), userController.create);
+router.post('/', authorize(ROLES.ADMIN), validate(authValidator.register), userController.create);
 
-// GET /api/v1/users — Admin only
-router.get('/', userController.getAll);
+// GET /api/v1/users — Admin, AssetManager
+router.get('/', authorize(ROLES.ADMIN, ROLES.ASSET_MANAGER), userController.getAll);
 
-// GET /api/v1/users/:id — Admin only
-router.get('/:id', userController.getById);
+// GET /api/v1/users/:id — Admin, AssetManager
+router.get('/:id', authorize(ROLES.ADMIN, ROLES.ASSET_MANAGER), userController.getById);
 
 // PATCH /api/v1/users/:id — Admin only (role promotion, profile update)
-router.patch('/:id', validate(userValidator.updateUser), userController.update);
+router.patch('/:id', authorize(ROLES.ADMIN), validate(userValidator.updateUser), userController.update);
 
 module.exports = router;
