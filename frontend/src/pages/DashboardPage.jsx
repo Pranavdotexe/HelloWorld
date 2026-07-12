@@ -31,14 +31,14 @@ const kpiConfig = [
   { key: 'upcomingReturns', label: 'Upcoming Returns', icon: Activity, tone: '#22d3ee', footer: 'Assets due back soon' },
 ];
 
-const trendData = [
-  { name: 'Mon', allocations: 18, bookings: 12 },
-  { name: 'Tue', allocations: 22, bookings: 17 },
-  { name: 'Wed', allocations: 19, bookings: 15 },
-  { name: 'Thu', allocations: 24, bookings: 19 },
-  { name: 'Fri', allocations: 28, bookings: 20 },
-  { name: 'Sat', allocations: 17, bookings: 9 },
-  { name: 'Sun', allocations: 13, bookings: 7 },
+const defaultTrendData = [
+  { name: 'Mon', allocations: 0, bookings: 0 },
+  { name: 'Tue', allocations: 0, bookings: 0 },
+  { name: 'Wed', allocations: 0, bookings: 0 },
+  { name: 'Thu', allocations: 0, bookings: 0 },
+  { name: 'Fri', allocations: 0, bookings: 0 },
+  { name: 'Sat', allocations: 0, bookings: 0 },
+  { name: 'Sun', allocations: 0, bookings: 0 },
 ];
 
 const quickActions = [
@@ -59,6 +59,8 @@ function DashboardPage() {
       .catch(() => setStats({}))
       .finally(() => setLoading(false));
   }, []);
+
+  const chartData = stats.trendData || defaultTrendData;
 
   const overviewStats = useMemo(
     () => [
@@ -93,10 +95,10 @@ function DashboardPage() {
       </section>
 
       <div className="dashboard-split dashboard-split-primary" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '1rem' }}>
-        <SurfaceCard title="Utilization trend" description="Illustrative weekly asset movement combining allocation and booking activity." index={0}>
+        <SurfaceCard title="Utilization trend" description="Real-time weekly asset movement combining allocation and booking activity." index={0}>
           <div style={{ height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData}>
+              <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="allocationsFill" x1="0" x2="0" y1="0" y2="1">
                     <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.55} />

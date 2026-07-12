@@ -9,7 +9,6 @@ import {
   getDiscrepancyReport,
 } from '../api/dataApi';
 import { useAuth } from '../context/AuthContext';
-<<<<<<< HEAD
 import {
   EmptyState,
   KeyValueList,
@@ -20,10 +19,6 @@ import {
   SurfaceCard,
   formatDate,
 } from '../components/ui';
-=======
-import { getAuditCycles, createAuditCycle, getAuditEntries, createAuditEntry, closeAuditCycle, getDiscrepancyReport } from '../api/dataApi';
-import { extractErrorMessage } from '../utils/errorHandler';
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
 
 function AuditsPage() {
   const { hasRole } = useAuth();
@@ -63,11 +58,7 @@ function AuditsPage() {
       setForm({ scope: { type: 'Department', value: '' }, auditors: '' });
       load();
     } catch (err) {
-<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to create audit cycle');
-=======
-      setError(extractErrorMessage(err));
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
@@ -89,17 +80,12 @@ function AuditsPage() {
       setEntryForm({});
       handleViewCycle(selectedCycle);
     } catch (err) {
-<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to submit audit entry');
-=======
-      alert(extractErrorMessage(err));
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
   const handleClose = async (id) => {
     if (!confirm('Close this audit cycle? This will lock all entries.')) return;
-<<<<<<< HEAD
     try {
       await closeAuditCycle(id);
       load();
@@ -107,22 +93,15 @@ function AuditsPage() {
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to close cycle');
     }
-=======
-    try { await closeAuditCycle(id); load(); setSelectedCycle(null); } catch (err) { alert(extractErrorMessage(err)); }
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
   };
 
   const handleReport = async (id) => {
     try {
       const res = await getDiscrepancyReport(id);
       setReport(res.data.data.report);
-<<<<<<< HEAD
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load discrepancy report');
     }
-=======
-    } catch (err) { alert(extractErrorMessage(err)); }
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
   };
 
   const stats = useMemo(() => ({

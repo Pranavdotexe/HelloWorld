@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useEffect, useMemo, useState } from 'react';
 import { BookMarked, CalendarClock, CalendarX2, Plus } from 'lucide-react';
 import { cancelBooking, createBooking, getAssets, getBookings } from '../api/dataApi';
@@ -11,11 +10,6 @@ import {
   SurfaceCard,
   formatDateTime,
 } from '../components/ui';
-=======
-import { useState, useEffect } from 'react';
-import { getBookings, createBooking, cancelBooking, getAssets } from '../api/dataApi';
-import { extractErrorMessage } from '../utils/errorHandler';
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
 
 function BookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -53,26 +47,18 @@ function BookingsPage() {
       setForm({});
       load();
     } catch (err) {
-<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to create booking');
-=======
-      setError(extractErrorMessage(err));
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
   const handleCancel = async (id) => {
     if (!confirm('Cancel this booking?')) return;
-<<<<<<< HEAD
     try {
       await cancelBooking(id, {});
       load();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to cancel booking');
     }
-=======
-    try { await cancelBooking(id, {}); load(); } catch (err) { alert(extractErrorMessage(err)); }
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
   };
 
   const stats = useMemo(() => ({

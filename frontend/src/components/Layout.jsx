@@ -23,7 +23,6 @@ import { useAuth } from '../context/AuthContext';
 import { Breadcrumbs, StatusPill } from './ui';
 
 const navItems = [
-<<<<<<< HEAD
   { path: '/', label: 'Dashboard', icon: LayoutDashboard, roles: null, caption: 'Operational overview' },
   { path: '/assets', label: 'Assets', icon: Boxes, roles: null, caption: 'Lifecycle registry' },
   { path: '/allocations', label: 'Allocations', icon: Sparkles, roles: null, caption: 'Ownership and transfer' },
@@ -31,27 +30,14 @@ const navItems = [
   { path: '/maintenance', label: 'Maintenance', icon: Wrench, roles: null, caption: 'Repair workflows' },
   { path: '/audits', label: 'Audits', icon: ClipboardCheck, roles: ['Admin', 'AssetManager'], caption: 'Verification cycles' },
   { path: '/org-setup', label: 'Organization', icon: Settings2, roles: ['Admin'], caption: 'Departments and roles' },
-  { path: '/reports', label: 'Reports', icon: ClipboardList, roles: ['Admin', 'AssetManager', 'DepartmentHead'], caption: 'Analytics and exports' },
+  { path: '/reports', label: 'Reports', icon: ClipboardList, roles: ['Admin', 'AssetManager'], caption: 'Analytics and exports' },
   { path: '/notifications', label: 'Notifications', icon: Bell, roles: null, caption: 'Alerts and reminders' },
   { path: '/activity-logs', label: 'Activity Logs', icon: ShieldCheck, roles: ['Admin'], caption: 'Audit trail' },
-=======
-  { path: '/', label: 'Dashboard', icon: '📊', roles: null },
-  { path: '/assets', label: 'Assets', icon: '📦', roles: null },
-  { path: '/allocations', label: 'Allocations', icon: '🔄', roles: null },
-  { path: '/bookings', label: 'Bookings', icon: '📅', roles: null },
-  { path: '/maintenance', label: 'Maintenance', icon: '🔧', roles: null },
-  { path: '/audits', label: 'Audits', icon: '📋', roles: ['Admin', 'AssetManager'] },
-  { path: '/org-setup', label: 'Organization', icon: '🏢', roles: ['Admin'] },
-  { path: '/reports', label: 'Reports', icon: '📈', roles: ['Admin', 'AssetManager'] },
-  { path: '/notifications', label: 'Notifications', icon: '🔔', roles: null },
-  { path: '/activity-logs', label: 'Activity Logs', icon: '📝', roles: ['Admin'] },
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
 ];
 
 const roleLabels = {
   Admin: 'Platform Admin',
   AssetManager: 'Asset Manager',
-  DepartmentHead: 'Department Head',
   Employee: 'Employee',
 };
 
@@ -87,7 +73,6 @@ function Layout({ children }) {
     navigate('/login');
   };
 
-<<<<<<< HEAD
   const renderSidebar = () => (
     <motion.aside
       className="glass-panel"
@@ -112,48 +97,6 @@ function Layout({ children }) {
             <div style={{ minWidth: 0 }}>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.18rem' }}>AssetFlow</div>
               <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>Enterprise asset command center</div>
-=======
-  const filteredItems = navItems.filter((item) => !item.roles || item.roles.includes(user?.role));
-
-  const roleBadge = {
-    Admin: 'badge-danger',
-    AssetManager: 'badge-info',
-    Employee: 'badge-success',
-  };
-
-  return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar */}
-      <aside
-        className="glass animate-slideIn"
-        style={{
-          width: sidebarOpen ? '260px' : '70px',
-          transition: 'width 0.3s ease',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          zIndex: 50,
-          overflow: 'hidden',
-        }}
-      >
-        {/* Logo */}
-        <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{
-            width: '36px', height: '36px', borderRadius: '0.5rem',
-            background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.125rem', fontWeight: 700, color: 'white', flexShrink: 0,
-          }}>
-            AF
-          </div>
-          {sidebarOpen && (
-            <div>
-              <div style={{ fontWeight: 700, fontSize: '1rem' }} className="gradient-text">AssetFlow</div>
-              <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>Enterprise ERP</div>
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
             </div>
           )}
         </div>
@@ -241,8 +184,8 @@ function Layout({ children }) {
   return (
     <div className="app-shell">
       <div style={{ display: 'flex', minHeight: '100vh' }}>
-        <div style={{ display: 'none', minWidth: shellWidth }} className="desktop-sidebar" />
-        <div style={{ position: 'fixed', inset: 0, width: shellWidth + 32, display: 'none' }} className="desktop-sidebar">
+        <div style={{ minWidth: shellWidth }} className="desktop-sidebar" />
+        <div style={{ position: 'fixed', inset: 0, width: shellWidth + 32 }} className="desktop-sidebar">
           {renderSidebar()}
         </div>
 
@@ -280,7 +223,12 @@ function Layout({ children }) {
                   <Breadcrumbs />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <div style={{ padding: '0.65rem 0.85rem', borderRadius: 16, background: 'rgba(148, 163, 184, 0.08)', color: 'var(--text-secondary)', fontSize: '0.82rem' }}>
+                  <div 
+                    onClick={() => navigate('/notifications')}
+                    style={{ padding: '0.65rem 0.85rem', borderRadius: 16, background: 'rgba(148, 163, 184, 0.08)', color: 'var(--text-secondary)', fontSize: '0.82rem', cursor: 'pointer', transition: 'background 0.2s' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(148, 163, 184, 0.14)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(148, 163, 184, 0.08)' }}
+                  >
                     <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{unreadCount}</span> unread alerts
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem', padding: '0.5rem', borderRadius: 18, background: 'rgba(148, 163, 184, 0.06)' }}>
@@ -289,7 +237,7 @@ function Layout({ children }) {
                     </div>
                     <div>
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Workspace</div>
-                      <div style={{ fontSize: '0.88rem', fontWeight: 700 }}>{user?.department?.name || 'Central Operations'}</div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700 }}>{user?.department?.name || 'Global Operations'}</div>
                     </div>
                   </div>
                 </div>

@@ -10,7 +10,6 @@ import {
   startMaintenance,
 } from '../api/dataApi';
 import { useAuth } from '../context/AuthContext';
-<<<<<<< HEAD
 import {
   EmptyState,
   FiltersBar,
@@ -21,10 +20,6 @@ import {
   SurfaceCard,
   formatDate,
 } from '../components/ui';
-=======
-import { getMaintenanceRequests, createMaintenance, approveMaintenance, rejectMaintenance, assignTechnician, startMaintenance, resolveMaintenance } from '../api/dataApi';
-import { extractErrorMessage } from '../utils/errorHandler';
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
 
 function MaintenancePage() {
   const { hasRole } = useAuth();
@@ -58,11 +53,7 @@ function MaintenancePage() {
       setForm({ priority: 'Medium' });
       load();
     } catch (err) {
-<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to create request');
-=======
-      setError(extractErrorMessage(err));
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
@@ -87,11 +78,7 @@ function MaintenancePage() {
       }
       load();
     } catch (err) {
-<<<<<<< HEAD
       setError(err.response?.data?.message || 'Maintenance action failed');
-=======
-      alert(extractErrorMessage(err));
->>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
