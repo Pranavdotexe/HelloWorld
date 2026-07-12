@@ -7,8 +7,8 @@ import {
   getDepartments,
   getUsers,
   updateUser,
+  createUser,
 } from '../api/dataApi';
-import { register as registerUser } from '../api/authApi';
 import { useAuth } from '../context/AuthContext';
 import {
   EmptyState,
@@ -96,7 +96,7 @@ function OrgSetupPage() {
     event.preventDefault();
     setError('');
     try {
-      await registerUser({
+      await createUser({
         name: form.name,
         email: form.email,
         password: form.password,

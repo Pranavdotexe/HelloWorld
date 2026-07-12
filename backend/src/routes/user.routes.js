@@ -8,9 +8,14 @@ const validate = require('../middleware/validate.middleware');
 const userValidator = require('../validators/user.validator');
 const { ROLES } = require('../config/constants');
 
+const authValidator = require('../validators/auth.validator');
+
 // All user management routes require authentication + Admin role
 router.use(auth);
 router.use(authorize(ROLES.ADMIN));
+
+// POST /api/v1/users — Admin only
+router.post('/', validate(authValidator.register), userController.create);
 
 // GET /api/v1/users — Admin only
 router.get('/', userController.getAll);
