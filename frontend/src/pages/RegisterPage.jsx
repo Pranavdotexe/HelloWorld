@@ -6,6 +6,7 @@ const RegisterPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('Employee');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
@@ -16,7 +17,7 @@ const RegisterPage = () => {
     setError('');
     setLoading(true);
     try {
-      await signup(name, email, password);
+      await signup(name, email, password, role);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
@@ -32,7 +33,7 @@ const RegisterPage = () => {
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ width: '56px', height: '56px', borderRadius: '0.75rem', background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 700, color: 'white', marginBottom: '1rem' }}>AF</div>
           <h1 className="gradient-text" style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.5rem' }}>Create Account</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Join AssetFlow as an Employee</p>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Join AssetFlow and get started</p>
         </div>
 
         {error && (
@@ -51,8 +52,17 @@ const RegisterPage = () => {
             <input id="reg-email" className="input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div>
+            <label className="label" htmlFor="reg-role">Role</label>
+            <select id="reg-role" className="input" value={role} onChange={(e) => setRole(e.target.value)} required>
+              <option value="Employee">Employee (User)</option>
+              <option value="Admin">Admin</option>
+              <option value="AssetManager">Asset Manager</option>
+              <option value="DepartmentHead">Department Head</option>
+            </select>
+          </div>
+          <div>
             <label className="label" htmlFor="reg-password">Password</label>
-            <input id="reg-password" className="input" type="password" placeholder="Min 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            <input id="reg-password" className="input" type="password" placeholder="Atleast one Uppercase and special character" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
           </div>
           <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '0.75rem', fontSize: '0.9375rem' }}>
             {loading ? 'Creating account...' : 'Create Account'}
