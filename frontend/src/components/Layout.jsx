@@ -81,7 +81,7 @@ function Layout({ children }) {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: 'calc(100vh - 2rem)',
+        height: 'calc(100vh - 2rem)',
         margin: '1rem',
         padding: '1rem',
         borderRadius: 32,
@@ -112,7 +112,7 @@ function Layout({ children }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', alignItems: 'center' }}>
               <div>
                 <div style={{ fontWeight: 800 }}>{roleLabels[user?.role] || user?.role}</div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{user?.department?.name || 'Organization-wide access'}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{user?.department?.name || 'Unassigned Workspace'}</div>
               </div>
               <StatusPill>{user?.role}</StatusPill>
             </div>
@@ -120,7 +120,7 @@ function Layout({ children }) {
         )}
       </div>
 
-      <nav style={{ display: 'grid', gap: '0.45rem', marginTop: '1.1rem', flex: 1, position: 'relative', zIndex: 1 }}>
+      <nav style={{ display: 'grid', gap: '0.45rem', marginTop: '1.1rem', flex: 1, overflowY: 'auto', position: 'relative', zIndex: 1 }}>
         {filteredItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -160,8 +160,8 @@ function Layout({ children }) {
       </nav>
 
       <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(148, 163, 184, 0.1)', position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
-          <div style={{ width: 46, height: 46, borderRadius: 16, background: 'rgba(148, 163, 184, 0.12)', display: 'grid', placeItems: 'center', fontWeight: 800 }}>
+        <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
+          <div style={{ width: 46, height: 46, borderRadius: 16, background: 'rgba(148, 163, 184, 0.12)', display: 'grid', placeItems: 'center', fontWeight: 800, flexShrink: 0 }}>
             {(user?.name || 'U').slice(0, 1).toUpperCase()}
           </div>
           {!collapsed && (
@@ -170,7 +170,11 @@ function Layout({ children }) {
               <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</div>
             </div>
           )}
-          {!collapsed && (
+          {collapsed ? (
+            <button className="button button-secondary button-sm" onClick={handleLogout} style={{ padding: '0.65rem', minWidth: 38, display: 'grid', placeItems: 'center' }} title="Logout">
+              <LogOut size={16} />
+            </button>
+          ) : (
             <button className="button button-secondary button-sm" onClick={handleLogout}>
               <LogOut size={14} />
               <span>Logout</span>
@@ -237,7 +241,7 @@ function Layout({ children }) {
                     </div>
                     <div>
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Workspace</div>
-                      <div style={{ fontSize: '0.88rem', fontWeight: 700 }}>{user?.department?.name || 'Global Operations'}</div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700 }}>{user?.department?.name || 'Unassigned Workspace'}</div>
                     </div>
                   </div>
                 </div>
