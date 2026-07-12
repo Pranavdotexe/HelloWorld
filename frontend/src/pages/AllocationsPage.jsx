@@ -7,6 +7,8 @@ import {
   getTransfers,
   rejectTransfer,
   returnAsset,
+  getAssets,
+  getUsers,
 } from '../api/dataApi';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -31,6 +33,20 @@ function AllocationsPage() {
   const [form, setForm] = useState({});
   const [error, setError] = useState('');
   const [returnForm, setReturnForm] = useState(null);
+  const [assetsList, setAssetsList] = useState([]);
+  const [usersList, setUsersList] = useState([]);
+
+  useEffect(() => {
+    if (showForm) {
+      getAssets({ status: 'Available', limit: 100 })
+        .then((res) => setAssetsList(res.data.data.assets || []))
+        .catch(() => setAssetsList([]));
+
+      getUsers({ limit: 100 })
+        .then((res) => setUsersList(res.data.data.users || []))
+        .catch(() => setUsersList([]));
+    }
+  }, [showForm]);
 
   const load = async () => {
     setLoading(true);
@@ -146,25 +162,38 @@ function AllocationsPage() {
         <form onSubmit={handleAllocate} style={{ display: 'grid', gap: '1rem', padding: '1.2rem', borderRadius: 22, background: 'rgba(8, 18, 34, 0.54)', border: '1px solid rgba(148, 163, 184, 0.08)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
             <div className="field">
-              <label>Asset ID</label>
-              <input className="input" value={form.asset || ''} onChange={(event) => setForm({ ...form, asset: event.target.value })} required />
+              <label>Asset</label>
+              <select className="select" value={form.asset || ''} onChange={(event) => setForm({ ...form, asset: event.target.value })} required>
+                <option value="">Select available asset...</option>
+                {assetsList.map((asset) => (
+                  <option key={asset._id} value={asset._id}>
+                    {asset.name} ({asset.assetTag})
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="field">
-              <label>User ID</label>
-              <input className="input" value={form.allocatedTo || ''} onChange={(event) => setForm({ ...form, allocatedTo: event.target.value })} required />
+              <label>Assign to employee</label>
+              <select className="select" value={form.allocatedTo || ''} onChange={(event) => setForm({ ...form, allocatedTo: event.target.value })} required>
+                <option value="">Select employee...</option>
+                {usersList.map((u) => (
+                  <option key={u._id} value={u._id}>
+                    {u.name} ({u.email})
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="field">
               <label>Expected return date</label>
               <input className="input" type="date" value={form.expectedReturnDate || ''} onChange={(event) => setForm({ ...form, expectedReturnDate: event.target.value })} />
             </div>
           </div>
-  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-    <button type="submit" className="button button-primary">Confirm allocation</button>
-    <button type="button" className="button button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
-    </div>
-  </form>
-          ) : null
-}
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <button type="submit" className="button button-primary">Confirm allocation</button>
+            <button type="button" className="button button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+          </div>
+        </form>
+      ) : null}
 
 {
   returnForm ? (
