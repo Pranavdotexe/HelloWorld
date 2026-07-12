@@ -33,7 +33,7 @@ graph TD
     classDef model fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff;
 
     %% Client Pages
-    subgraph Client Pages (React Router)
+    subgraph "Client Pages (React Router)"
         P_Dash[📊 Dashboard Page]
         P_Assets[📦 Assets Directory]
         P_Alloc[🔄 Allocations & Transfers]
@@ -78,7 +78,7 @@ graph TD
     end
 
     %% Services
-    subgraph Business Logic (services/*)
+    subgraph "Business Logic (services/*)"
         S_Auth[Auth Service]
         S_Asset[Asset Service]
         S_Alloc[Allocation Service]
@@ -175,7 +175,7 @@ graph TB
     classDef security fill:#ef4444,stroke:#b91c1c,color:#fff;
     classDef db fill:#10b981,stroke:#047857,color:#fff;
 
-    subgraph Client Layer (React 19)
+    subgraph "Client Layer (React 19)"
         UI[Tailwind CSS Components] --- Pages[Vite Routing & Pages]
         Pages --- AuthCtx[AuthContext / User Session]
         Pages --- Axios[Axios Instance / Interceptors]
@@ -188,7 +188,7 @@ graph TB
     Axios --- Proxy
     Proxy --- Route[API Routes Gateway]
     
-    subgraph Service Application Layer (Node/Express)
+    subgraph "Service Application Layer (Node/Express)"
         Route --- Controllers[Express Controllers]
         Controllers --- Services[Business Services]
         Services --- Aggregation[Report Aggregator]
