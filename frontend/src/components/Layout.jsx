@@ -90,9 +90,9 @@ function Layout({ children }) {
       }}
     >
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at top, rgba(96, 165, 250, 0.12), transparent 34%)', pointerEvents: 'none' }} />
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem', minWidth: 0 }}>
-          <div style={{ width: 52, height: 52, borderRadius: 18, background: 'linear-gradient(135deg, #2563eb, #38bdf8 55%, #818cf8)', display: 'grid', placeItems: 'center', color: 'white', fontWeight: 800, fontFamily: 'var(--font-display)' }}>AF</div>
+      <div style={{ display: 'flex', flexDirection: collapsed ? 'column' : 'row', alignItems: 'center', justifyContent: collapsed ? 'center' : 'space-between', gap: '0.75rem', position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem', minWidth: 0, justifyContent: collapsed ? 'center' : 'flex-start' }}>
+          <div style={{ width: 52, height: 52, borderRadius: 18, background: 'linear-gradient(135deg, #2563eb, #38bdf8 55%, #818cf8)', display: 'grid', placeItems: 'center', color: 'white', fontWeight: 800, fontFamily: 'var(--font-display)', flexShrink: 0 }}>AF</div>
           {!collapsed && (
             <div style={{ minWidth: 0 }}>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.18rem' }}>AssetFlow</div>
@@ -100,7 +100,7 @@ function Layout({ children }) {
             </div>
           )}
         </div>
-        <button className="button button-ghost button-sm" onClick={() => setCollapsed((value) => !value)} aria-label="Toggle sidebar">
+        <button className="button button-ghost button-sm" onClick={() => setCollapsed((value) => !value)} aria-label="Toggle sidebar" style={{ marginTop: collapsed ? '0.5rem' : 0 }}>
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>
       </div>
@@ -131,13 +131,15 @@ function Layout({ children }) {
               style={({ isActive }) => ({
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.9rem',
-                padding: collapsed ? '0.9rem' : '0.9rem 1rem',
+                justifyContent: collapsed ? 'center' : 'flex-start',
+                gap: collapsed ? '0' : '0.9rem',
+                padding: collapsed ? '0.6rem' : '0.9rem 1rem',
                 borderRadius: 18,
                 textDecoration: 'none',
                 border: isActive ? '1px solid rgba(96, 165, 250, 0.22)' : '1px solid transparent',
                 background: isActive ? 'linear-gradient(135deg, rgba(37, 99, 235, 0.16), rgba(56, 189, 248, 0.08))' : 'transparent',
                 color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                transition: 'padding 0.25s ease, gap 0.25s ease, justify-content 0.25s ease',
               })}
             >
               <div style={{ width: 38, height: 38, borderRadius: 14, display: 'grid', placeItems: 'center', background: 'rgba(148, 163, 184, 0.08)', flexShrink: 0 }}>
@@ -160,7 +162,7 @@ function Layout({ children }) {
       </nav>
 
       <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(148, 163, 184, 0.1)', position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: collapsed ? 'column' : 'row', gap: '0.85rem', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ width: 46, height: 46, borderRadius: 16, background: 'rgba(148, 163, 184, 0.12)', display: 'grid', placeItems: 'center', fontWeight: 800, flexShrink: 0 }}>
             {(user?.name || 'U').slice(0, 1).toUpperCase()}
           </div>
@@ -171,7 +173,7 @@ function Layout({ children }) {
             </div>
           )}
           {collapsed ? (
-            <button className="button button-secondary button-sm" onClick={handleLogout} style={{ padding: '0.65rem', minWidth: 38, display: 'grid', placeItems: 'center' }} title="Logout">
+            <button className="button button-secondary button-sm" onClick={handleLogout} style={{ padding: '0.65rem', width: 46, height: 46, display: 'grid', placeItems: 'center', borderRadius: 16 }} title="Logout">
               <LogOut size={16} />
             </button>
           ) : (
@@ -234,15 +236,6 @@ function Layout({ children }) {
                     onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(148, 163, 184, 0.08)' }}
                   >
                     <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{unreadCount}</span> unread alerts
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem', padding: '0.5rem', borderRadius: 18, background: 'rgba(148, 163, 184, 0.06)' }}>
-                    <div style={{ width: 34, height: 34, borderRadius: 12, display: 'grid', placeItems: 'center', background: 'rgba(96, 165, 250, 0.14)' }}>
-                      <Building2 size={16} color="var(--brand-primary)" />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Workspace</div>
-                      <div style={{ fontSize: '0.88rem', fontWeight: 700 }}>{user?.department?.name || 'Unassigned Workspace'}</div>
-                    </div>
                   </div>
                 </div>
               </div>
