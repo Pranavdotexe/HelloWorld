@@ -3,6 +3,7 @@ import { BadgeCheck, LockKeyhole, Mail, UserRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AuthShell from '../components/AuthShell';
 import { useAuth } from '../context/AuthContext';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 function RegisterPage() {
   const [name, setName] = useState('');
@@ -22,7 +23,7 @@ function RegisterPage() {
       await signup(name, email, password, role);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -82,7 +83,6 @@ function RegisterPage() {
               <option value="Employee">Employee</option>
               <option value="Admin">Admin</option>
               <option value="AssetManager">Asset Manager</option>
-              <option value="DepartmentHead">Department Head</option>
             </select>
           </div>
           <span className="field-hint">The API currently supports multiple roles at signup, so the UI preserves that behavior.</span>

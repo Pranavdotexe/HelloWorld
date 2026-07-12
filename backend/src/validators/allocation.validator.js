@@ -12,7 +12,7 @@ const createAllocation = Joi.object({
     'any.required': 'Allocated-to user ID is required',
   }),
   department: objectId.allow(null).optional(),
-  expectedReturnDate: Joi.date().iso().allow(null).optional(),
+  expectedReturnDate: Joi.date().iso().allow(null, '').empty('').optional(),
 });
 
 const returnAllocation = Joi.object({

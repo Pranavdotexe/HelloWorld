@@ -9,6 +9,7 @@ import {
   returnAsset,
 } from '../api/dataApi';
 import { useAuth } from '../context/AuthContext';
+<<<<<<< HEAD
 import {
   EmptyState,
   LoadingState,
@@ -18,6 +19,10 @@ import {
   SurfaceCard,
   formatDate,
 } from '../components/ui';
+=======
+import { getAllocations, createAllocation, returnAsset, getOverdueAllocations, getAssets, getUsers, getTransfers, createTransfer, approveTransfer, rejectTransfer } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
 
 const tabs = ['Allocations', 'Transfers'];
 
@@ -63,7 +68,11 @@ function AllocationsPage() {
       setForm({});
       load();
     } catch (err) {
+<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to allocate asset');
+=======
+      setError(extractErrorMessage(err));
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
@@ -74,27 +83,40 @@ function AllocationsPage() {
       setReturnForm(null);
       load();
     } catch (err) {
+<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to process return');
+=======
+      alert(extractErrorMessage(err));
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
   const handleApproveTransfer = async (id) => {
+<<<<<<< HEAD
     try {
       await approveTransfer(id);
       load();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to approve transfer');
     }
+=======
+    try { await approveTransfer(id); load(); } catch (err) { alert(extractErrorMessage(err)); }
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
   };
 
   const handleRejectTransfer = async (id) => {
     const reason = prompt('Rejection reason:');
+<<<<<<< HEAD
     if (!reason) return;
     try {
       await rejectTransfer(id, { rejectionReason: reason });
       load();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to reject transfer');
+=======
+    if (reason) {
+      try { await rejectTransfer(id, { rejectionReason: reason }); load(); } catch (err) { alert(extractErrorMessage(err)); }
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
@@ -126,6 +148,7 @@ function AllocationsPage() {
         <MetricCard title="Transfer queue" value={stats.requested} icon={ArrowRightLeft} tone="var(--warning)" index={2} footer="Requests awaiting approval" />
       </section>
 
+<<<<<<< HEAD
       <SurfaceCard title="Workflow board" description="Switch between live allocations and transfer requests." index={0}>
         <div className="page-stack">
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -137,6 +160,52 @@ function AllocationsPage() {
               >
                 {label}
               </button>
+=======
+      {error && <div style={{ padding: '0.75rem', background: 'rgba(239,68,68,0.1)', borderRadius: '0.5rem', color: '#f87171', fontSize: '0.8125rem', marginBottom: '1rem' }}>{error}</div>}
+
+      {tab === 0 && (
+        <div>
+          {hasRole('Admin', 'AssetManager') && (
+            <div style={{ marginBottom: '1rem' }}>
+              <button className="btn btn-primary btn-sm" onClick={() => setShowForm(!showForm)}>+ Allocate Asset</button>
+            </div>
+          )}
+          {showForm && (
+            <form onSubmit={handleAllocate} className="card" style={{ padding: '1.25rem', marginBottom: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+              <div><label className="label">Asset ID *</label><input className="input" placeholder="Asset ObjectId" value={form.asset || ''} onChange={(e) => setForm({ ...form, asset: e.target.value })} required /></div>
+              <div><label className="label">User ID *</label><input className="input" placeholder="User ObjectId" value={form.allocatedTo || ''} onChange={(e) => setForm({ ...form, allocatedTo: e.target.value })} required /></div>
+              <div><label className="label">Return Date</label><input className="input" type="date" value={form.expectedReturnDate || ''} onChange={(e) => setForm({ ...form, expectedReturnDate: e.target.value })} /></div>
+              <button type="submit" className="btn btn-primary btn-sm">Allocate</button>
+            </form>
+          )}
+          {returnForm && (
+            <form onSubmit={handleReturn} className="card" style={{ padding: '1.25rem', marginBottom: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+              <div><label className="label">Return Condition *</label>
+                <select className="input" value={returnForm.condition || ''} onChange={(e) => setReturnForm({ ...returnForm, condition: e.target.value })} required>
+                  <option value="">Select...</option><option value="Good">Good</option><option value="Fair">Fair</option><option value="Poor">Poor</option><option value="Damaged">Damaged</option>
+                </select>
+              </div>
+              <div><label className="label">Notes</label><input className="input" value={returnForm.notes || ''} onChange={(e) => setReturnForm({ ...returnForm, notes: e.target.value })} /></div>
+              <button type="submit" className="btn btn-success btn-sm">Process Return</button>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={() => setReturnForm(null)}>Cancel</button>
+            </form>
+          )}
+          <div style={{ display: 'grid', gap: '0.75rem' }}>
+            {allocations.map((a) => (
+              <div key={a._id} className="card" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontWeight: 600 }}>{a.asset?.name} ({a.asset?.assetTag})</div>
+                  <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>To: {a.allocatedTo?.name} · By: {a.allocatedBy?.name}</div>
+                  {a.expectedReturnDate && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Return by: {new Date(a.expectedReturnDate).toLocaleDateString()}</div>}
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <span className={`badge ${statusBadge[a.status]}`}>{a.status}</span>
+                  {a.status === 'Active' && hasRole('Admin', 'AssetManager') && (
+                    <button className="btn btn-sm btn-secondary" onClick={() => setReturnForm({ id: a._id, condition: '', notes: '' })}>Return</button>
+                  )}
+                </div>
+              </div>
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
             ))}
           </div>
 
@@ -158,9 +227,20 @@ function AllocationsPage() {
                   <input className="input" type="date" value={form.expectedReturnDate || ''} onChange={(event) => setForm({ ...form, expectedReturnDate: event.target.value })} />
                 </div>
               </div>
+<<<<<<< HEAD
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                 <button type="submit" className="button button-primary">Confirm allocation</button>
                 <button type="button" className="button button-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+=======
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <span className={`badge ${statusBadge[t.status]}`}>{t.status}</span>
+                {t.status === 'Requested' && hasRole('Admin', 'AssetManager') && (
+                  <>
+                    <button className="btn btn-sm btn-success" onClick={() => handleApproveTransfer(t._id)}>Approve</button>
+                    <button className="btn btn-sm btn-danger" onClick={() => handleRejectTransfer(t._id)}>Reject</button>
+                  </>
+                )}
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
               </div>
             </form>
           ) : null}

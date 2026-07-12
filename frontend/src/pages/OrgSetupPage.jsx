@@ -9,6 +9,7 @@ import {
   updateUser,
 } from '../api/dataApi';
 import { useAuth } from '../context/AuthContext';
+<<<<<<< HEAD
 import {
   EmptyState,
   LoadingState,
@@ -17,6 +18,10 @@ import {
   StatusPill,
   SurfaceCard,
 } from '../components/ui';
+=======
+import { getDepartments, createDepartment, getCategories, createCategory, getUsers, updateUser } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
 
 const tabs = ['Departments', 'Asset Categories', 'Employee Directory'];
 
@@ -78,7 +83,11 @@ function OrgSetupPage() {
       setForm({});
       loadData();
     } catch (err) {
+<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to create category');
+=======
+      setError(extractErrorMessage(err));
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
@@ -87,7 +96,11 @@ function OrgSetupPage() {
       await updateUser(userId, { role: newRole });
       loadData();
     } catch (err) {
+<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to update role');
+=======
+      alert(extractErrorMessage(err));
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 
@@ -105,6 +118,7 @@ function OrgSetupPage() {
         ]}
       />
 
+<<<<<<< HEAD
       <SurfaceCard title="Master data tabs" description="Switch between foundational ERP records." index={0}>
         <div className="page-stack">
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -112,6 +126,43 @@ function OrgSetupPage() {
               <button key={tab} className={activeTab === index ? 'button button-primary button-sm' : 'button button-secondary button-sm'} onClick={() => { setActiveTab(index); setShowForm(false); }}>
                 {tab}
               </button>
+=======
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '0.25rem', borderBottom: '1px solid var(--border-color)', marginBottom: '1.5rem' }}>
+        {tabs.map((tab, i) => (
+          <button key={tab} onClick={() => { setActiveTab(i); setShowForm(false); }}
+            style={{ padding: '0.75rem 1.25rem', border: 'none', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500, background: 'none', color: activeTab === i ? 'var(--color-primary)' : 'var(--text-secondary)', borderBottom: activeTab === i ? '2px solid var(--color-primary)' : '2px solid transparent', transition: 'all 0.2s' }}>
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {error && <div style={{ padding: '0.75rem', background: 'rgba(239,68,68,0.1)', borderRadius: '0.5rem', color: '#f87171', fontSize: '0.8125rem', marginBottom: '1rem' }}>{error}</div>}
+
+      {/* Department Tab */}
+      {activeTab === 0 && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Departments ({departments.length})</h2>
+            <button className="btn btn-primary btn-sm" onClick={() => setShowForm(!showForm)}>+ Add Department</button>
+          </div>
+          {showForm && (
+            <form onSubmit={handleCreateDept} className="card" style={{ padding: '1.25rem', marginBottom: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <input className="input" style={{ flex: 1, minWidth: '200px' }} placeholder="Department Name" value={form.name || ''} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+              <input className="input" style={{ flex: 1, minWidth: '200px' }} placeholder="Description (optional)" value={form.description || ''} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+              <button type="submit" className="btn btn-primary btn-sm">Create</button>
+            </form>
+          )}
+          <div style={{ display: 'grid', gap: '0.75rem' }}>
+            {departments.map((dept) => (
+              <div key={dept._id} className="card" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontWeight: 600 }}>{dept.name}</div>
+                  {dept.description && <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>{dept.description}</div>}
+                </div>
+                <span className={`badge ${dept.status === 'Active' ? 'badge-success' : 'badge-neutral'}`}>{dept.status}</span>
+              </div>
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
             ))}
           </div>
 
@@ -133,6 +184,7 @@ function OrgSetupPage() {
             </form>
           ) : null}
 
+<<<<<<< HEAD
           {showForm && activeTab === 1 ? (
             <form onSubmit={handleCreateCategory} style={{ display: 'grid', gap: '1rem', padding: '1.2rem', borderRadius: 22, background: 'rgba(8, 18, 34, 0.54)', border: '1px solid rgba(148, 163, 184, 0.08)' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
@@ -258,6 +310,53 @@ function OrgSetupPage() {
               )}
             </div>
           ) : null}
+=======
+      {/* Employee Tab */}
+      {activeTab === 2 && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', gap: '1rem', flexWrap: 'wrap' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Employees ({users.length})</h2>
+            <input className="input" style={{ maxWidth: '300px' }} placeholder="Search by name or email..." value={search} onChange={(e) => setSearch(e.target.value)} />
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Name</th>
+                  <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Email</th>
+                  <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Department</th>
+                  <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Role</th>
+                  <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Status</th>
+                  <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u) => (
+                  <tr key={u._id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                    <td style={{ padding: '0.75rem', fontWeight: 500 }}>{u.name}</td>
+                    <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>{u.email}</td>
+                    <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>{u.department?.name || '—'}</td>
+                    <td style={{ padding: '0.75rem' }}>
+                      <span className={`badge ${u.role === 'Admin' ? 'badge-danger' : u.role === 'AssetManager' ? 'badge-info' : 'badge-success'}`}>{u.role}</span>
+                    </td>
+                    <td style={{ padding: '0.75rem' }}>
+                      <span className={`badge ${u.status === 'Active' ? 'badge-success' : 'badge-neutral'}`}>{u.status}</span>
+                    </td>
+                    <td style={{ padding: '0.75rem' }}>
+                      {u.role !== 'Admin' && u._id !== user._id && (
+                        <select className="input" style={{ maxWidth: '160px', padding: '0.25rem 0.5rem', fontSize: '0.8125rem' }}
+                          value={u.role} onChange={(e) => handleRoleChange(u._id, e.target.value)}>
+                          <option value="Employee">Employee</option>
+                          <option value="AssetManager">Asset Mgr</option>
+                        </select>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
         </div>
       </SurfaceCard>
     </div>

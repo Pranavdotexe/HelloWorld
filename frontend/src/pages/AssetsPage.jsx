@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Boxes, CircleDollarSign, ClipboardList, History, Plus, Warehouse } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+<<<<<<< HEAD
 import { createAsset, getAssetHistory, getAssets, getCategories } from '../api/dataApi';
 import {
   EmptyState,
@@ -14,6 +15,10 @@ import {
   SurfaceCard,
   formatNumber,
 } from '../components/ui';
+=======
+import { getAssets, createAsset, getCategories, getAssetHistory } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
 
 function AssetsPage() {
   const { hasRole } = useAuth();
@@ -60,7 +65,11 @@ function AssetsPage() {
       setForm({ isBookable: false, condition: 'Good' });
       load();
     } catch (err) {
+<<<<<<< HEAD
       setError(err.response?.data?.message || 'Failed to register asset');
+=======
+      setError(extractErrorMessage(err));
+>>>>>>> 36d925b87dc35fa31d5d222718b2f5f7754fb103
     }
   };
 

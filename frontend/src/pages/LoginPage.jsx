@@ -3,6 +3,7 @@ import { LockKeyhole, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AuthShell from '../components/AuthShell';
 import { useAuth } from '../context/AuthContext';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ function LoginPage() {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
