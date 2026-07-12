@@ -176,22 +176,22 @@ graph TB
     classDef db fill:#10b981,stroke:#047857,color:#fff;
 
     subgraph Client Layer (React 19)
-        UI[Tailwind CSS Components] <--> Pages[Vite Routing & Pages]
-        Pages <--> AuthCtx[AuthContext / User Session]
-        Pages <--> Axios[Axios Instance / Interceptors]
+        UI[Tailwind CSS Components] --- Pages[Vite Routing & Pages]
+        Pages --- AuthCtx[AuthContext / User Session]
+        Pages --- Axios[Axios Instance / Interceptors]
     end
     
     subgraph Infrastructure
         Proxy[Vite Proxy]
     end
     
-    Axios <--> Proxy
-    Proxy <--> Route[API Routes Gateway]
+    Axios --- Proxy
+    Proxy --- Route[API Routes Gateway]
     
     subgraph Service Application Layer (Node/Express)
-        Route <--> Controllers[Express Controllers]
-        Controllers <--> Services[Business Services]
-        Services <--> Aggregation[Report Aggregator]
+        Route --- Controllers[Express Controllers]
+        Controllers --- Services[Business Services]
+        Services --- Aggregation[Report Aggregator]
     end
     
     subgraph Security Layer
@@ -203,11 +203,11 @@ graph TB
     Controllers -.-> Joi
     
     subgraph Database Layer
-        Mongoose[Mongoose ODM] <--> DB[(MongoDB Atlas Cloud)]
+        Mongoose[Mongoose ODM] --- DB[(MongoDB Atlas Cloud)]
     end
     
-    Services <--> Mongoose
-    Aggregation <--> Mongoose
+    Services --- Mongoose
+    Aggregation --- Mongoose
 
     class UI,Pages,AuthCtx,Axios client;
     class Proxy,Route infra;
@@ -305,7 +305,7 @@ graph TD
         MongoDB[(MongoDB Atlas)]
     end
     
-    Models <-->|5. Read / Write| MongoDB
+    Models ---|5. Read / Write| MongoDB
     MainService --> Notify
     MainService --> Logger
     MainService -->|6. Return DTO| Controller
