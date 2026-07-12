@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -20,7 +21,7 @@ const RegisterPage = () => {
       await signup(name, email, password, role);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -57,7 +58,6 @@ const RegisterPage = () => {
               <option value="Employee">Employee (User)</option>
               <option value="Admin">Admin</option>
               <option value="AssetManager">Asset Manager</option>
-              <option value="DepartmentHead">Department Head</option>
             </select>
           </div>
           <div>

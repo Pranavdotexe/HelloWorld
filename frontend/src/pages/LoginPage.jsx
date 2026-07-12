@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ const LoginPage = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getAuditCycles, createAuditCycle, getAuditEntries, createAuditEntry, closeAuditCycle, getDiscrepancyReport } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const AuditsPage = () => {
   const { user, hasRole } = useAuth();
@@ -38,7 +39,7 @@ const AuditsPage = () => {
       setForm({ scope: { type: 'Department', value: '' }, auditors: '' });
       load();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed');
+      setError(extractErrorMessage(err));
     }
   };
 
@@ -58,20 +59,20 @@ const AuditsPage = () => {
       setEntryForm({});
       handleViewCycle(selectedCycle);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed');
+      alert(extractErrorMessage(err));
     }
   };
 
   const handleClose = async (id) => {
     if (!confirm('Close this audit cycle? This will lock all entries.')) return;
-    try { await closeAuditCycle(id); load(); setSelectedCycle(null); } catch (err) { alert(err.response?.data?.message || 'Failed'); }
+    try { await closeAuditCycle(id); load(); setSelectedCycle(null); } catch (err) { alert(extractErrorMessage(err)); }
   };
 
   const handleReport = async (id) => {
     try {
       const res = await getDiscrepancyReport(id);
       setReport(res.data.data.report);
-    } catch (err) { alert(err.response?.data?.message || 'Failed'); }
+    } catch (err) { alert(extractErrorMessage(err)); }
   };
 
   const statusBadge = { Open: 'badge-info', InProgress: 'badge-warning', Closed: 'badge-neutral' };

@@ -77,7 +77,6 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     isAdmin: user?.role === 'Admin',
     isAssetManager: user?.role === 'AssetManager',
-    isDepartmentHead: user?.role === 'DepartmentHead',
     hasRole: (...roles) => roles.includes(user?.role),
   };
 

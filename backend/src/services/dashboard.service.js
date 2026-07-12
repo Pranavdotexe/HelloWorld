@@ -21,9 +21,6 @@ const getDashboardStats = async (user) => {
   // Scope by role
   if (user.role === 'Employee') {
     baseAllocationFilter.allocatedTo = user._id;
-  } else if (user.role === 'DepartmentHead' && user.department) {
-    baseAssetFilter.department = user.department;
-    baseAllocationFilter.department = user.department;
   }
 
   const [

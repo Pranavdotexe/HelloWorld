@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getAllocations, createAllocation, returnAsset, getOverdueAllocations, getAssets, getUsers, getTransfers, createTransfer, approveTransfer, rejectTransfer } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const AllocationsPage = () => {
   const { hasRole } = useAuth();
@@ -38,7 +39,7 @@ const AllocationsPage = () => {
       setForm({});
       load();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed');
+      setError(extractErrorMessage(err));
     }
   };
 
@@ -49,18 +50,18 @@ const AllocationsPage = () => {
       setReturnForm(null);
       load();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed');
+      alert(extractErrorMessage(err));
     }
   };
 
   const handleApproveTransfer = async (id) => {
-    try { await approveTransfer(id); load(); } catch (err) { alert(err.response?.data?.message || 'Failed'); }
+    try { await approveTransfer(id); load(); } catch (err) { alert(extractErrorMessage(err)); }
   };
 
   const handleRejectTransfer = async (id) => {
     const reason = prompt('Rejection reason:');
     if (reason) {
-      try { await rejectTransfer(id, { rejectionReason: reason }); load(); } catch (err) { alert(err.response?.data?.message || 'Failed'); }
+      try { await rejectTransfer(id, { rejectionReason: reason }); load(); } catch (err) { alert(extractErrorMessage(err)); }
     }
   };
 
@@ -81,7 +82,7 @@ const AllocationsPage = () => {
 
       {tab === 0 && (
         <div>
-          {hasRole('Admin', 'AssetManager', 'DepartmentHead') && (
+          {hasRole('Admin', 'AssetManager') && (
             <div style={{ marginBottom: '1rem' }}>
               <button className="btn btn-primary btn-sm" onClick={() => setShowForm(!showForm)}>+ Allocate Asset</button>
             </div>
@@ -137,7 +138,7 @@ const AllocationsPage = () => {
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <span className={`badge ${statusBadge[t.status]}`}>{t.status}</span>
-                {t.status === 'Requested' && hasRole('Admin', 'AssetManager', 'DepartmentHead') && (
+                {t.status === 'Requested' && hasRole('Admin', 'AssetManager') && (
                   <>
                     <button className="btn btn-sm btn-success" onClick={() => handleApproveTransfer(t._id)}>Approve</button>
                     <button className="btn btn-sm btn-danger" onClick={() => handleRejectTransfer(t._id)}>Reject</button>

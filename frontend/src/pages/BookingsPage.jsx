@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getBookings, createBooking, cancelBooking, getAssets } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const BookingsPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -32,13 +33,13 @@ const BookingsPage = () => {
       setForm({});
       load();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed');
+      setError(extractErrorMessage(err));
     }
   };
 
   const handleCancel = async (id) => {
     if (!confirm('Cancel this booking?')) return;
-    try { await cancelBooking(id, {}); load(); } catch (err) { alert(err.response?.data?.message || 'Failed'); }
+    try { await cancelBooking(id, {}); load(); } catch (err) { alert(extractErrorMessage(err)); }
   };
 
   const statusBadge = { Upcoming: 'badge-info', Ongoing: 'badge-success', Completed: 'badge-neutral', Cancelled: 'badge-danger' };

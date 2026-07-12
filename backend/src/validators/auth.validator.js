@@ -19,8 +19,8 @@ const register = Joi.object({
       'string.pattern.base': 'Password must contain at least one uppercase letter and one number',
       'any.required': 'Password is required',
     }),
-  role: Joi.string().valid('Admin', 'Employee', 'AssetManager', 'DepartmentHead').optional().messages({
-    'any.only': 'Role must be one of: Admin, Employee, AssetManager, DepartmentHead',
+  role: Joi.string().valid('Admin', 'Employee', 'AssetManager').optional().messages({
+    'any.only': 'Role must be one of: Admin, Employee, AssetManager',
   }),
 });
 

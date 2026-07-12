@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getAssets, createAsset, getCategories, getAssetHistory } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const statusBadge = { Available: 'badge-success', Allocated: 'badge-info', Reserved: 'badge-warning', UnderMaintenance: 'badge-warning', Lost: 'badge-danger', Retired: 'badge-neutral', Disposed: 'badge-neutral' };
 
@@ -41,7 +42,7 @@ const AssetsPage = () => {
       setForm({});
       load();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed');
+      setError(extractErrorMessage(err));
     }
   };
 

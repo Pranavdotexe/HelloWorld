@@ -11,7 +11,7 @@ const navItems = [
   { path: '/maintenance', label: 'Maintenance', icon: '🔧', roles: null },
   { path: '/audits', label: 'Audits', icon: '📋', roles: ['Admin', 'AssetManager'] },
   { path: '/org-setup', label: 'Organization', icon: '🏢', roles: ['Admin'] },
-  { path: '/reports', label: 'Reports', icon: '📈', roles: ['Admin', 'AssetManager', 'DepartmentHead'] },
+  { path: '/reports', label: 'Reports', icon: '📈', roles: ['Admin', 'AssetManager'] },
   { path: '/notifications', label: 'Notifications', icon: '🔔', roles: null },
   { path: '/activity-logs', label: 'Activity Logs', icon: '📝', roles: ['Admin'] },
 ];
@@ -45,7 +45,6 @@ const Layout = ({ children }) => {
   const roleBadge = {
     Admin: 'badge-danger',
     AssetManager: 'badge-info',
-    DepartmentHead: 'badge-warning',
     Employee: 'badge-success',
   };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getDepartments, createDepartment, getCategories, createCategory, getUsers, updateUser } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const tabs = ['Departments', 'Asset Categories', 'Employee Directory'];
 
@@ -57,7 +58,7 @@ const OrgSetupPage = () => {
       setForm({});
       loadData();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed');
+      setError(extractErrorMessage(err));
     }
   };
 
@@ -66,7 +67,7 @@ const OrgSetupPage = () => {
       await updateUser(userId, { role: newRole });
       loadData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to update role');
+      alert(extractErrorMessage(err));
     }
   };
 
@@ -107,7 +108,6 @@ const OrgSetupPage = () => {
                 <div>
                   <div style={{ fontWeight: 600 }}>{dept.name}</div>
                   {dept.description && <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>{dept.description}</div>}
-                  {dept.head && <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>Head: {dept.head.name}</div>}
                 </div>
                 <span className={`badge ${dept.status === 'Active' ? 'badge-success' : 'badge-neutral'}`}>{dept.status}</span>
               </div>
@@ -171,7 +171,7 @@ const OrgSetupPage = () => {
                     <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>{u.email}</td>
                     <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>{u.department?.name || '—'}</td>
                     <td style={{ padding: '0.75rem' }}>
-                      <span className={`badge ${u.role === 'Admin' ? 'badge-danger' : u.role === 'AssetManager' ? 'badge-info' : u.role === 'DepartmentHead' ? 'badge-warning' : 'badge-success'}`}>{u.role}</span>
+                      <span className={`badge ${u.role === 'Admin' ? 'badge-danger' : u.role === 'AssetManager' ? 'badge-info' : 'badge-success'}`}>{u.role}</span>
                     </td>
                     <td style={{ padding: '0.75rem' }}>
                       <span className={`badge ${u.status === 'Active' ? 'badge-success' : 'badge-neutral'}`}>{u.status}</span>
@@ -181,7 +181,6 @@ const OrgSetupPage = () => {
                         <select className="input" style={{ maxWidth: '160px', padding: '0.25rem 0.5rem', fontSize: '0.8125rem' }}
                           value={u.role} onChange={(e) => handleRoleChange(u._id, e.target.value)}>
                           <option value="Employee">Employee</option>
-                          <option value="DepartmentHead">Dept Head</option>
                           <option value="AssetManager">Asset Mgr</option>
                         </select>
                       )}

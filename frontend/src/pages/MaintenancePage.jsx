@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getMaintenanceRequests, createMaintenance, approveMaintenance, rejectMaintenance, assignTechnician, startMaintenance, resolveMaintenance } from '../api/dataApi';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const MaintenancePage = () => {
   const { hasRole } = useAuth();
@@ -31,7 +32,7 @@ const MaintenancePage = () => {
       setForm({});
       load();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed');
+      setError(extractErrorMessage(err));
     }
   };
 
@@ -54,7 +55,7 @@ const MaintenancePage = () => {
       }
       load();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed');
+      alert(extractErrorMessage(err));
     }
   };
 
